@@ -1,0 +1,102 @@
+import React, { useState, useEffect } from "react";
+import {
+  Modal,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import NewsForm from "@/components/NewsForm";
+import Colors from "@/lib/colors";
+import Toast from "react-native-toast-message";
+import { supabase } from "@/lib/supabase";
+
+export default function CreateNewsModal() {
+  const [isFormVisible, setIsFormVisible] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [loadingUser, setLoadingUser] = useState(true);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user?.id) {
+        setUserId(session.user.id);
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "Authentication Error",
+          text2: "User not logged in.",
+        });
+      }
+      setLoadingUser(false);
+    };
+
+    fetchUser();
+  }, []);
+
+  if (loadingUser || userId === null) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
+
+  return (
+    <>
+      {userId !== null && (
+        <TouchableOpacity
+          style={styles.createButton}
+          onPress={() => setIsFormVisible(true)}
+        >
+          <Ionicons name="add-circle" size={50} color={Colors.primary} />
+        </TouchableOpacity>
+      )}
+
+      <Modal
+        visible={isFormVisible}
+        animationType="slide"
+        presentationStyle="pageSheet"
+        onRequestClose={() => setIsFormVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => setIsFormVisible(false)}
+          >
+            <Ionicons name="close-circle" size={30} color={Colors.gray} />
+          </TouchableOpacity>
+          <NewsForm userId={userId} onNewsCreated={() => setIsFormVisible(false)} />
+        </View>
+
+        <Toast />
+      </Modal>
+    </>
+  );
+}
+
+const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    paddingTop: 50,
+    backgroundColor: Colors.white,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 20,
+    right: 20,
+    zIndex: 1,
+  },
+  createButton: {
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    zIndex: 1,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
