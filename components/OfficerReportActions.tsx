@@ -19,6 +19,7 @@ import { getStatusColor } from "@/lib/statusColors";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import ResolveReportForm from "./ResolveReportForm";
 import AssignToOrganizationModal from "./modal/AssignToOrganizationModal"; // Import the new modal
+import EscalateToAgencyModal from "./modal/EscalateToAgencyModal"; // Import the new modal
 
 const RejectFormSchema = z.object({
   reason: z
@@ -40,6 +41,8 @@ export default function OfficerReportActions({
   const [showResolveForm, setShowResolveForm] = useState(false);
   const [showAssignToOrganizationModal, setShowAssignToOrganizationModal] =
     useState(false); // New state for the assign modal
+  const [showEscalateToAgencyModal, setShowEscalateToAgencyModal] =
+    useState(false); // New state for the escalate modal
 
   const {
     control,
@@ -157,13 +160,7 @@ export default function OfficerReportActions({
       status: "verified",
       targetStatus: "escalated",
       text: "Escalate",
-      onPress: () =>
-        handleReportAction(
-          report,
-          setLoading,
-          "escalated",
-          "Report escalated to national agencies by officer.",
-        ),
+      onPress: () => setShowEscalateToAgencyModal(true),
     },
     {
       status: "active",
@@ -282,6 +279,17 @@ export default function OfficerReportActions({
           onClose={() => setShowAssignToOrganizationModal(false)}
           onAssignSuccess={() => {
             setShowAssignToOrganizationModal(false);
+          }}
+        />
+      )}
+
+      {showEscalateToAgencyModal && report.status === "verified" && (
+        <EscalateToAgencyModal
+          report={report}
+          onClose={() => setShowEscalateToAgencyModal(false)}
+          onEscalateSuccess={() => {
+            setShowEscalateToAgencyModal(false);
+            // Optionally, add a refresh mechanism or another toast here
           }}
         />
       )}

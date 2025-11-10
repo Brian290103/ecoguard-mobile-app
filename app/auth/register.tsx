@@ -49,7 +49,7 @@ const roleData = [
   { label: "Citizen", value: "user" },
   { label: "County Officer", value: "officer" },
   { label: "Organization Representative", value: "org" },
-  { label: "National Agency Representative", value: "nat" },
+  // { label: "National Agency Representative", value: "nat" },
 ];
 
 export default function Register() {

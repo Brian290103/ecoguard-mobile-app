@@ -168,7 +168,7 @@ const EventsForm = ({ userId, onEventCreated }: EventsFormProps) => {
         name="description"
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
-            style={Styles.input}
+            style={Styles.descriptionInput}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}

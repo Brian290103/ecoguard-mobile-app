@@ -6,8 +6,6 @@ const google = createGoogleGenerativeAI({
   apiKey: process.env.EXPO_PUBLIC_GOOGLE_GENERATIVE_AI_API_KEY,
 });
 
-// console.log(process.env.EXPO_PUBLIC_GOOGLE_GENERATIVE_AI_API_KEY);
-
 const embeddingModel = google.textEmbedding("text-embedding-004");
 
 export const generateChunks = (

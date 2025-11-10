@@ -4,6 +4,7 @@ import React from "react";
 import RejectedReportDetails from "./RejectedReportDetails";
 import ResolvedReportDetails from "./ResolvedReportDetails";
 import AssignedReportDetails from "./AssignedReportDetails"; // Import the new AssignedReportDetails component
+import EscalatedReportDetails from "./EscalatedReportDetails"; // Import the new EscalatedReportDetails component
 
 interface MoreTabProps {
   report: Report;
@@ -14,10 +15,13 @@ export default function MoreTab({ report }: MoreTabProps) {
     <View style={styles.container}>
       {report.status === "rejected" ? (
         <RejectedReportDetails reportId={report.id} />
-      ) : report.status === "resolved" || report.status === "assigned" ? (
+      ) : report.status === "resolved" ||
+        report.status === "assigned" ||
+        report.status === "escalated" ? (
         <>
           <ResolvedReportDetails reportId={report.id} />
           <AssignedReportDetails reportId={report.id} />
+          <EscalatedReportDetails reportId={report.id} />
         </>
       ) : (
         <View>

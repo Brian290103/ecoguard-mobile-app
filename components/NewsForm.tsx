@@ -26,7 +26,10 @@ interface NewsFormProps {
 const FormSchema = z.object({
   title: z.string().min(1, { message: "Title is required." }),
   description: z.string().min(1, { message: "Description is required." }),
-  caption: z.string().min(1, { message: "Caption is required." }).max(250, { message: "Caption must be 250 characters or less." }),
+  caption: z
+    .string()
+    .min(1, { message: "Caption is required." })
+    .max(250, { message: "Caption must be 250 characters or less." }),
   poster_url: z.string().url({ message: "A valid poster URL is required." }),
 });
 
@@ -72,7 +75,11 @@ const NewsForm = ({ userId, onNewsCreated }: NewsFormProps) => {
       user_id: userId,
     };
 
-    const { data: insertedNews, error } = await supabase.from("news").insert(newNewsData).select('id').single();
+    const { data: insertedNews, error } = await supabase
+      .from("news")
+      .insert(newNewsData)
+      .select("id")
+      .single();
 
     if (error) {
       Toast.show({
@@ -90,7 +97,11 @@ const NewsForm = ({ userId, onNewsCreated }: NewsFormProps) => {
       text2: "Your news has been successfully submitted.",
     });
     if (insertedNews) {
-      sendNewsNotificationToUsers(newNewsData.title, newNewsData.caption, insertedNews.id);
+      sendNewsNotificationToUsers(
+        newNewsData.title,
+        newNewsData.caption,
+        insertedNews.id,
+      );
     }
     reset(); // Clear form fields
     onNewsCreated(); // Close the modal
@@ -123,7 +134,7 @@ const NewsForm = ({ userId, onNewsCreated }: NewsFormProps) => {
         name="caption"
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
-            style={Styles.input}
+            style={Styles.descriptionInput}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -141,7 +152,7 @@ const NewsForm = ({ userId, onNewsCreated }: NewsFormProps) => {
         name="description"
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
-            style={Styles.input}
+            style={Styles.descriptionInput}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}

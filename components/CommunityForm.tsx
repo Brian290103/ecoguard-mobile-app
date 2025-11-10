@@ -1,4 +1,11 @@
-import { View, Text, TextInput, StyleSheet, ActivityIndicator, TouchableOpacity, } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 import Toast from "react-native-toast-message";
@@ -119,7 +126,7 @@ const CommunityForm = ({ userId, onCommunityCreated }: CommunityFormProps) => {
         name="about"
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
-            style={Styles.input}
+            style={Styles.descriptionInput}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}

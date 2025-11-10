@@ -21,6 +21,9 @@ import ReportCard from "@/components/ReportCard";
 import DashboardMetricCard from "@/components/DashboardMetricCard";
 import SearchBox from "@/components/SearchBox";
 import DashboardStackHeader from "@/components/DashboardStackHeader";
+import LatestNewsList from "@/components/LatestNewsList";
+import LatestEventsList from "@/components/LatestEventsList";
+import LatestResourcesList from "@/components/LatestResourcesList";
 
 export default function User() {
   const router = useRouter();
@@ -223,6 +226,10 @@ export default function User() {
             ))
           )}
         </View>
+
+        <LatestNewsList />
+        <LatestEventsList />
+        <LatestResourcesList />
       </ScrollView>
     </SafeAreaView>
   );

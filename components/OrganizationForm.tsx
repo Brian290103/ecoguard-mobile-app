@@ -138,7 +138,7 @@ const OrganizationForm = ({
         name="about"
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
-            style={Styles.input}
+            style={Styles.descriptionInput}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}

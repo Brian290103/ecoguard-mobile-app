@@ -113,17 +113,23 @@ const ReportForm = ({ userId, latitude, longitude }: ReportFormProps) => {
     }
 
     if (insertedReport) {
+      console.log("Generating embeddings ...");
       await generateEmbeddings(
         newReportData.description,
         insertedReport.id,
         "reports",
       );
+
+      console.log("Embeddings generated. Upserting report to Qdrant ...");
       await upsertReportToQdrant({
         description: newReportData.description,
         id: insertedReport.id,
         title: newReportData.title,
         userId: userId,
       });
+
+      console.log("Report upserted to Qdrant.");
+      console.log("Sending notification to officers ...");
       sendReportNotificationToOfficers(newReportData.title, insertedReport.id);
       const newReportHistory = {
         report_id: insertedReport.id,
@@ -180,7 +186,7 @@ const ReportForm = ({ userId, latitude, longitude }: ReportFormProps) => {
         name="description"
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
-            style={Styles.input}
+            style={Styles.descriptionInput}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}

@@ -10,7 +10,7 @@ import React, { useEffect, useState } from "react";
 import { getDistanceInKm } from "@/lib/location";
 import Colors from "@/lib/colors";
 
-import { GoogleMaps, AppleMaps } from "expo-maps";
+// import { GoogleMaps, AppleMaps } from "expo-maps";
 
 interface LocationTabProps {
   report: Report;
@@ -48,8 +48,8 @@ export default function LocationTab({ report }: LocationTabProps) {
         <Text style={styles.value}>N/A</Text>
       )}
 
-      {Platform.OS === "ios" && <AppleMaps.View style={{ flex: 1 }} />}
-      {Platform.OS === "android" && <GoogleMaps.View style={{ flex: 1 }} />}
+      {/*{Platform.OS === "ios" && <AppleMaps.View style={{ flex: 1 }} />}*/}
+      {/*{Platform.OS === "android" && <GoogleMaps.View style={{ flex: 1 }} />}*/}
     </View>
   );
 }

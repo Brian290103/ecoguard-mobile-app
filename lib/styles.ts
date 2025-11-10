@@ -42,6 +42,16 @@ const Styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 10,
   },
+  descriptionInput: {
+    height: 40,
+    width: "100%",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+    minHeight: 100,
+  },
   inputLabel: {
     marginBottom: 5,
     paddingStart: 5,

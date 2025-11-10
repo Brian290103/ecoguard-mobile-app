@@ -1,11 +1,14 @@
-const qdrantUrl = "https://ecoguard-qdrant.uisen-global.com/";
+const qdrantUrl =
+  process.env.EXPO_PUBLIC_QDRANT_URL ||
+  "https://ecoguard-qdrant.uisen-global.com";
 // const qdrantUrl =
 //   "http://qdrant-n8ww8400c8g88okoo4sok8gc.130.61.203.124.sslip.io/";
-const qdrantApiKey = "nBafoKpV7qHeFFk842u22wY12dP5PLkE";
+const qdrantApiKey =
+  process.env.EXPO_PUBLIC_QDRANT_API_KEY || "RWJyeq5k0WdI9D9JfHcry1NoZrZv88y";
 
 const collectionExists = async (collectionName: string): Promise<boolean> => {
   try {
-    const response = await fetch(`${qdrantUrl}collections/${collectionName}`, {
+    const response = await fetch(`${qdrantUrl}/collections/${collectionName}`, {
       method: "GET",
       headers: {
         "api-key": qdrantApiKey,
@@ -23,7 +26,7 @@ const collectionExists = async (collectionName: string): Promise<boolean> => {
 
 const createCollection = async (collectionName: string) => {
   try {
-    const response = await fetch(`${qdrantUrl}collections/${collectionName}`, {
+    const response = await fetch(`${qdrantUrl}/collections/${collectionName}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -68,7 +71,7 @@ export const upsertToQdrant = async (collectionName: string, points: any[]) => {
     }
 
     const response = await fetch(
-      `${qdrantUrl}collections/${collectionName}/points?wait=true`,
+      `${qdrantUrl}/collections/${collectionName}/points?wait=true`,
       {
         method: "PUT",
         headers: {
@@ -106,7 +109,7 @@ export const searchQdrant = async (
 ) => {
   try {
     const response = await fetch(
-      `${qdrantUrl}collections/${collectionName}/points/search`,
+      `${qdrantUrl}/collections/${collectionName}/points/search`,
       {
         method: "POST",
         headers: {

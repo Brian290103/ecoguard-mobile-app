@@ -9,6 +9,7 @@ export const updateReportStatusAndHistory = async (
   newStatus: ReportStatus,
   notes: string,
   organizationId?: string, // Added optional parameter
+  agencyId?: string, // Added optional parameter
 ) => {
   try {
     // Get the report creator's user ID and report number
@@ -22,7 +23,8 @@ export const updateReportStatusAndHistory = async (
       throw new Error("Report not found or error fetching report creator.");
     }
 
-    const { user_id: reportCreatorId, report_number: reportNumber } = reportData;
+    const { user_id: reportCreatorId, report_number: reportNumber } =
+      reportData;
 
     // Prepare update object for reports table
     const updateObject: { status: ReportStatus } = {
@@ -53,6 +55,42 @@ export const updateReportStatusAndHistory = async (
       throw historyError;
     }
 
+    // Send notification to agency reps if a report is escalated
+    if (newStatus === "escalated" && agencyId) {
+      const { data: reps, error: repsError } = await supabase
+        .from("agency_reps")
+        .select("user_id")
+        .eq("agency_id", agencyId)
+        .eq("is_approved", true);
+
+      if (repsError) {
+        console.error("Error fetching agency reps:", repsError);
+      } else if (reps && reps.length > 0) {
+        const repUserIds = reps.map((r) => r.user_id);
+        const { data: tokens, error: tokensError } = await supabase
+          .from("expo_push_tokens")
+          .select("token, user_id")
+          .in("user_id", repUserIds);
+
+        if (tokensError) {
+          console.error(
+            "Error fetching push tokens for agency reps:",
+            tokensError,
+          );
+        } else if (tokens && tokens.length > 0) {
+          const notifications = tokens.map((t) => ({
+            to: t.token,
+            title: "New Report Escalated",
+            body: `A new report #${reportNumber} has been escalated to your agency.`,
+            user_id: t.user_id,
+            reference_table: "reports",
+            reference_row_id: reportId,
+          }));
+          await sendMobilePushNotification(notifications);
+        }
+      }
+    }
+
     // Send notification to organization reps if a report is assigned
     if (newStatus === "assigned" && organizationId) {
       const { data: reps, error: repsError } = await supabase
@@ -71,7 +109,10 @@ export const updateReportStatusAndHistory = async (
           .in("user_id", repUserIds);
 
         if (tokensError) {
-          console.error("Error fetching push tokens for org reps:", tokensError);
+          console.error(
+            "Error fetching push tokens for org reps:",
+            tokensError,
+          );
         } else if (tokens && tokens.length > 0) {
           const notifications = tokens.map((t) => ({
             to: t.token,

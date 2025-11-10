@@ -1,4 +1,11 @@
-import { View, Text, TextInput, StyleSheet, ActivityIndicator, TouchableOpacity, } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 import Toast from "react-native-toast-message";
@@ -21,7 +28,9 @@ const FormSchema = z.object({
   title: z.string().min(1, { message: "Title is required." }),
   caption: z.string().min(1, { message: "Caption is required." }),
   poster_url: z.string().url({ message: "A valid poster URL is required." }),
-  resource_url: z.string().url({ message: "A valid resource URL is required." }),
+  resource_url: z
+    .string()
+    .url({ message: "A valid resource URL is required." }),
   type: z.enum(["youtube", "website", "file"], {
     required_error: "Type is required.",
   }),
@@ -37,7 +46,9 @@ const resourceTypeData = [
 
 const ResourceForm = ({ userId, onResourceCreated }: ResourceFormProps) => {
   const [loading, setLoading] = useState(false);
-  const [resourceType, setResourceType] = useState<"youtube" | "website" | "file">("website");
+  const [resourceType, setResourceType] = useState<
+    "youtube" | "website" | "file"
+  >("website");
 
   const {
     control,
@@ -140,7 +151,7 @@ const ResourceForm = ({ userId, onResourceCreated }: ResourceFormProps) => {
         name="caption"
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
-            style={Styles.input}
+            style={Styles.descriptionInput}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -180,7 +191,9 @@ const ResourceForm = ({ userId, onResourceCreated }: ResourceFormProps) => {
       {resourceType === "file" ? (
         <>
           <Text style={Styles.inputLabel}>Resource File</Text>
-          <FileUploader onUrlChange={(url) => setValue("resource_url", url || "")} />
+          <FileUploader
+            onUrlChange={(url) => setValue("resource_url", url || "")}
+          />
           {errors.resource_url && (
             <Text style={Styles.inputError}>{errors.resource_url.message}</Text>
           )}
